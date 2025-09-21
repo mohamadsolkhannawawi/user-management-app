@@ -1,11 +1,25 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import HomePage from './pages/HomePage';
+import UserListPage from './pages/UserListPage';
+import AddUserPage from './pages/AddUserPage';
+
 function App() {
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-base-200">
-            <h1 className="text-4xl font-bold text-primary mb-4">
-                User Management App
-            </h1>
-            <button className="btn btn-primary">Hello DaisyUI!</button>
-        </div>
+        <Router>
+            <div className="flex flex-col min-h-screen">
+                <Navbar />
+                <main className="flex-grow container mx-auto px-4 py-8">
+                    <Routes>
+                        <Route path="/" element={<HomePage />} />
+                        <Route path="/users" element={<UserListPage />} />
+                        <Route path="/add-user" element={<AddUserPage />} />
+                    </Routes>
+                </main>
+                <Footer />
+            </div>
+        </Router>
     );
 }
 
