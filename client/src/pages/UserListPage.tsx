@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { Link } from 'react-router-dom';
 
 // Defines the shape of a User object
 type User = {
@@ -129,13 +128,9 @@ const UserListPage = () => {
                                     </span>
                                 </td>
                                 <td className="space-x-2">
-                                    <Link
-                                        to={`/edit-user/${user.id}`}
-                                        className="btn btn-sm btn-info"
-                                    >
+                                    <button className="btn btn-sm btn-info">
                                         Edit
-                                    </Link>
-
+                                    </button>
                                     <button
                                         className="btn btn-sm btn-error"
                                         onClick={() => setUserToDelete(user)}
