@@ -32,13 +32,12 @@ router.get('/:id', async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
         const user = await prisma.user.findUnique({
-            where: { id: parseInt(id) }, // Convert id from string to number
+            where: { id: parseInt(id) },
         });
 
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-
         res.status(200).json(user);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching user', error });
@@ -60,6 +59,39 @@ router.post('/', async (req: Request, res: Response) => {
                 .json({ message: 'Validation failed', errors: error.issues });
         }
         res.status(500).json({ message: 'Error creating user', error });
+    }
+});
+
+// PUT /:id - Updates an existing user
+router.put('/:id', async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const validatedData = userSchema.parse(req.body);
+
+        const updatedUser = await prisma.user.update({
+            where: { id: parseInt(id) },
+            data: validatedData,
+        });
+
+        res.status(200).json(updatedUser);
+    } catch (error) {
+        if (error instanceof z.ZodError) {
+            return res
+                .status(400)
+                .json({ message: 'Validation failed', errors: error.issues });
+        }
+        // Type guard to check if the error is a Prisma error for record not found
+        if (
+            error &&
+            typeof error === 'object' &&
+            'code' in error &&
+            error.code === 'P2025'
+        ) {
+            return res
+                .status(404)
+                .json({ message: 'User to update not found' });
+        }
+        res.status(500).json({ message: 'Error updating user', error });
     }
 });
 
