@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X, Home, Users, UserPlus } from 'lucide-react';
+import { Menu, X, Home, Users, UserPlus, ChartNoAxesGantt } from 'lucide-react';
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -8,19 +8,31 @@ const Navbar = () => {
     const navLinks = (
         <>
             <li>
-                <Link to="/" className="flex items-center gap-2 hover:text-wb-accent transition-colors" onClick={() => setIsMenuOpen(false)}>
+                <Link
+                    to="/"
+                    className="flex items-center gap-2 hover:text-wb-accent transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                >
                     <Home size={20} />
                     <span>Home</span>
                 </Link>
             </li>
             <li>
-                <Link to="/users" className="flex items-center gap-2 hover:text-wb-accent transition-colors" onClick={() => setIsMenuOpen(false)}>
+                <Link
+                    to="/users"
+                    className="flex items-center gap-2 hover:text-wb-accent transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                >
                     <Users size={20} />
                     <span>User List</span>
                 </Link>
             </li>
             <li>
-                <Link to="/add-user" className="flex items-center gap-2 hover:text-wb-accent transition-colors" onClick={() => setIsMenuOpen(false)}>
+                <Link
+                    to="/add-user"
+                    className="flex items-center gap-2 hover:text-wb-accent transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                >
                     <UserPlus size={20} />
                     <span>Add User</span>
                 </Link>
@@ -33,16 +45,18 @@ const Navbar = () => {
             <div className="container mx-auto flex justify-between items-center">
                 {/* Logo */}
                 <div className="flex-1">
-                    <Link to="/" className="text-xl font-bold hover:text-wb-accent transition-colors">
-                        UserApp
+                    <Link
+                        to="/"
+                        className="flex items-center gap-2 text-xl font-bold hover:text-wb-accent transition-colors"
+                    >
+                        <ChartNoAxesGantt color="#ffffff" size={24} />
+                        <span>UserApp</span>
                     </Link>
                 </div>
 
                 {/* Desktop Menu */}
                 <div className="hidden lg:flex">
-                    <ul className="flex space-x-4">
-                        {navLinks}
-                    </ul>
+                    <ul className="flex space-x-4">{navLinks}</ul>
                 </div>
 
                 {/* Mobile Menu Button */}

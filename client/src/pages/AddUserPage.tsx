@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const AddUserPage = () => {
     const navigate = useNavigate();
@@ -11,12 +12,17 @@ const AddUserPage = () => {
         email: '',
         nomorTelepon: '',
         departemen: '',
+        statusAktif: true, // Default to active
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value, type, checked } = e.target;
+        setFormData({
+            ...formData,
+            [name]: type === 'checkbox' ? checked : value,
+        });
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -25,13 +31,15 @@ const AddUserPage = () => {
         setError(null);
         try {
             await axios.post('http://localhost:5001/api/users', formData);
+            toast.success('User added successfully!');
             navigate('/users');
         } catch (err: any) {
             console.error(err);
-            setError(
+            const errorMessage =
                 err.response?.data?.message ||
-                    'Failed to add user. Please check your input.'
-            );
+                'Failed to add user. Please check your input.';
+            setError(errorMessage);
+            toast.error(errorMessage);
         } finally {
             setIsSubmitting(false);
         }
@@ -98,6 +106,23 @@ const AddUserPage = () => {
                             className={inputStyle}
                             required
                         />
+                    </div>
+
+                    <div className="mb-4 flex items-center">
+                        <input
+                            type="checkbox"
+                            id="statusAktif"
+                            name="statusAktif"
+                            checked={formData.statusAktif}
+                            onChange={handleChange}
+                            className="h-4 w-4 text-wb-primary focus:ring-wb-secondary border-gray-300 rounded"
+                        />
+                        <label
+                            htmlFor="statusAktif"
+                            className="ml-2 block text-sm text-gray-900"
+                        >
+                            User Aktif
+                        </label>
                     </div>
 
                     {error && (

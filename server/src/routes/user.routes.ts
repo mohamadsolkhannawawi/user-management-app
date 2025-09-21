@@ -15,6 +15,7 @@ const userSchema = z.object({
         .string()
         .min(10, 'Nomor telepon must be at least 10 characters'),
     departemen: z.string().min(1, 'Departemen is required'),
+    statusAktif: z.boolean().default(true),
 });
 
 // GET / - Fetches all users

@@ -1,6 +1,6 @@
 // src/pages/UserListPage.tsx
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import {
@@ -9,8 +9,15 @@ import {
     User,
     Mail,
     Hash,
-    Building,
     Settings,
+    UserRoundCheck,
+    Search as UserSearch,
+    X,
+    ArrowDownAZ,
+    ArrowDownZA,
+    ListFilter,
+    ArrowDown01,
+    ArrowDown10,
 } from 'lucide-react';
 
 type User = {
@@ -24,11 +31,8 @@ type User = {
     updatedAt: string;
 };
 
-// Define a type for the editable fields
-type UserEditData = Omit<
-    User,
-    'id' | 'statusAktif' | 'createdAt' | 'updatedAt'
->;
+// Define a type for the editable fields, now including statusAktif
+type UserEditData = Omit<User, 'id' | 'createdAt' | 'updatedAt'>;
 
 const UserListPage = () => {
     const [users, setUsers] = useState<User[]>([]);
@@ -38,6 +42,14 @@ const UserListPage = () => {
     const [userToDelete, setUserToDelete] = useState<User | null>(null);
     const [userToEdit, setUserToEdit] = useState<User | null>(null);
     const [editFormData, setEditFormData] = useState<UserEditData | null>(null);
+
+    // New states for sorting and filtering
+    const [sortColumn, setSortColumn] = useState<'id' | 'nama'>('id');
+    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+    const [statusFilter, setStatusFilter] = useState<
+        'all' | 'active' | 'inactive'
+    >('all');
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -58,9 +70,46 @@ const UserListPage = () => {
         fetchUsers();
     }, []);
 
-    const filteredUsers = users.filter((user) =>
-        user.nama.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const handleSort = (column: 'id' | 'nama') => {
+        if (sortColumn === column) {
+            setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortColumn(column);
+            setSortOrder('asc');
+        }
+    };
+
+    const processedUsers = useMemo(() => {
+        return users
+            .filter((user) => {
+                // Search term filter
+                const matchesSearch = user.nama
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase());
+
+                // Status filter
+                const matchesStatus = (() => {
+                    if (statusFilter === 'all') return true;
+                    if (statusFilter === 'active') return user.statusAktif;
+                    if (statusFilter === 'inactive') return !user.statusAktif;
+                    return true;
+                })();
+
+                return matchesSearch && matchesStatus;
+            })
+            .sort((a, b) => {
+                const isAsc = sortOrder === 'asc';
+                if (sortColumn === 'nama') {
+                    const nameA = a.nama.toLowerCase();
+                    const nameB = b.nama.toLowerCase();
+                    if (nameA < nameB) return isAsc ? -1 : 1;
+                    if (nameA > nameB) return isAsc ? 1 : -1;
+                    return 0;
+                } else { // sort by ID
+                    return isAsc ? a.id - b.id : b.id - a.id;
+                }
+            });
+    }, [users, searchTerm, statusFilter, sortOrder, sortColumn]);
 
     // --- DELETE LOGIC ---
     const handleDelete = async () => {
@@ -82,20 +131,28 @@ const UserListPage = () => {
     // --- EDIT LOGIC ---
     const handleOpenEditModal = (user: User) => {
         setUserToEdit(user);
+        // Include statusAktif in the form data
         setEditFormData({
             nama: user.nama,
             email: user.email,
             nomorTelepon: user.nomorTelepon,
             departemen: user.departemen,
+            statusAktif: user.statusAktif,
         });
     };
 
-    const handleEditChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleEditChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    ) => {
         if (!editFormData) return;
-        setEditFormData({
-            ...editFormData,
-            [e.target.name]: e.target.value,
-        });
+        const { name, value, type } = e.target;
+
+        if (type === 'checkbox') {
+            const checked = (e.target as HTMLInputElement).checked;
+            setEditFormData({ ...editFormData, [name]: checked });
+        } else {
+            setEditFormData({ ...editFormData, [name]: value });
+        }
     };
 
     const handleEditSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -105,11 +162,10 @@ const UserListPage = () => {
         try {
             const response = await axios.put(
                 `http://localhost:5001/api/users/${userToEdit.id}`,
-                editFormData
+                editFormData // This now includes statusAktif
             );
             const updatedUser = response.data;
 
-            // Update the user in the list
             setUsers(
                 users.map((user) =>
                     user.id === updatedUser.id ? updatedUser : user
@@ -117,7 +173,7 @@ const UserListPage = () => {
             );
 
             toast.success(`User "${updatedUser.nama}" updated successfully!`);
-            setUserToEdit(null); // Close modal
+            setUserToEdit(null);
             setEditFormData(null);
         } catch (err) {
             toast.error('Failed to update user.');
@@ -149,26 +205,112 @@ const UserListPage = () => {
     const labelStyle = 'block text-gray-700 text-sm font-bold mb-2';
 
     return (
-        <div className="p-8 bg-wb-base rounded-lg shadow-md">
+        <div className="p-4 md:p-8 bg-wb-base rounded-lg shadow-md min-h-screen">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
-                <h1 className="text-3xl font-bold text-wb-primary">
+                <h1 className="text-3xl font-bold text-wb-primary self-start">
                     User List
                 </h1>
-                <input
-                    type="text"
-                    placeholder="Search by name..."
-                    className="w-full md:w-1/3 p-3 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-wb-secondary"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
+                <div className="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto">
+                    {/* Status Filter Dropdown */}
+                    <div className="relative inline-block text-left w-full sm:w-auto">
+                        <div>
+                            <button
+                                type="button"
+                                className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-3 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-wb-secondary"
+                                onClick={() => setIsFilterOpen(!isFilterOpen)}
+                            >
+                                <ListFilter size={18} className="mr-2" />
+                                Filter
+                            </button>
+                        </div>
+                        {isFilterOpen && (
+                            <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
+                                <div
+                                    className="py-1"
+                                    role="menu"
+                                    aria-orientation="vertical"
+                                >
+                                    <a
+                                        href="#"
+                                        className={`block px-4 py-2 text-sm ${statusFilter === 'all' ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            setStatusFilter('all');
+                                            setIsFilterOpen(false);
+                                        }}
+                                    >
+                                        All Statuses
+                                    </a>
+                                    <a
+                                        href="#"
+                                        className={`block px-4 py-2 text-sm ${statusFilter === 'active' ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            setStatusFilter('active');
+                                            setIsFilterOpen(false);
+                                        }}
+                                    >
+                                        Active
+                                    </a>
+                                    <a
+                                        href="#"
+                                        className={`block px-4 py-2 text-sm ${statusFilter === 'inactive' ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            setStatusFilter('inactive');
+                                            setIsFilterOpen(false);
+                                        }}
+                                    >
+                                        Inactive
+                                    </a>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Search Input */}
+                    <div className="relative w-full sm:w-auto md:w-64">
+                        <input
+                            type="text"
+                            placeholder="Search by name..."
+                            className="w-full p-3 pr-12 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-wb-secondary"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                        <div className="absolute inset-y-0 right-0 flex items-center pr-3 space-x-2">
+                            {searchTerm && (
+                                <button
+                                    onClick={() => setSearchTerm('')}
+                                    className="text-gray-400 hover:text-gray-600"
+                                    type="button"
+                                >
+                                    <X size={18} />
+                                </button>
+                            )}
+                            <UserSearch
+                                className="text-gray-400 pointer-events-none"
+                                size={18}
+                            />
+                        </div>
+                    </div>
+                </div>
             </div>
+
             <div className="overflow-x-auto rounded-lg shadow">
                 <table className="w-full text-left text-xs md:text-base">
                     <thead className="bg-wb-accent text-wb-primary uppercase text-xs md:text-sm">
                         <tr>
                             <th className="p-3 whitespace-nowrap">
                                 <div className="flex items-center gap-2">
-                                    <Hash size={16} /> ID
+                                    <Hash size={16} />
+                                    <span>ID</span>
+                                    <button onClick={() => handleSort('id')} className="ml-2">
+                                        {sortColumn === 'id' ? (
+                                            sortOrder === 'asc' ? <ArrowDown01 size={16} /> : <ArrowDown10 size={16} />
+                                        ) : (
+                                            <ArrowDown01 size={16} className="text-gray-400" />
+                                        )}
+                                    </button>
                                 </div>
                             </th>
                             <th className="p-3 whitespace-nowrap">
@@ -180,6 +322,13 @@ const UserListPage = () => {
                                     <span className="hidden md:inline">
                                         Nama
                                     </span>
+                                    <button onClick={() => handleSort('nama')} className="ml-2">
+                                        {sortColumn === 'nama' ? (
+                                            sortOrder === 'asc' ? <ArrowDownAZ size={16} /> : <ArrowDownZA size={16} />
+                                        ) : (
+                                            <ArrowDownAZ size={16} className="text-gray-400" />
+                                        )}
+                                    </button>
                                 </div>
                             </th>
                             <th className="p-3 whitespace-nowrap hidden md:table-cell">
@@ -189,7 +338,7 @@ const UserListPage = () => {
                             </th>
                             <th className="p-3 whitespace-nowrap hidden md:table-cell">
                                 <div className="flex items-center justify-center gap-2">
-                                    <Settings size={16} /> Status
+                                    <UserRoundCheck size={16} /> Status
                                 </div>
                             </th>
                             <th className="p-3 text-center whitespace-nowrap">
@@ -200,7 +349,7 @@ const UserListPage = () => {
                         </tr>
                     </thead>
                     <tbody className="text-gray-700">
-                        {filteredUsers.map((user, index) => (
+                        {processedUsers.map((user, index) => (
                             <tr
                                 key={user.id}
                                 className={`${index % 2 === 0 ? 'bg-white' : 'bg-wb-base'} text-xs md:text-sm`}
@@ -295,51 +444,69 @@ const UserListPage = () => {
                             Edit User
                         </h3>
                         <form onSubmit={handleEditSubmit}>
-                            <div className="mb-4">
-                                <label className={labelStyle}>Nama</label>
-                                <input
-                                    type="text"
-                                    name="nama"
-                                    value={editFormData.nama}
-                                    onChange={handleEditChange}
-                                    className={inputStyle}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className={labelStyle}>Email</label>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    value={editFormData.email}
-                                    onChange={handleEditChange}
-                                    className={inputStyle}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className={labelStyle}>
-                                    Nomor Telepon
-                                </label>
-                                <input
-                                    type="text"
-                                    name="nomorTelepon"
-                                    value={editFormData.nomorTelepon}
-                                    onChange={handleEditChange}
-                                    className={inputStyle}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className={labelStyle}>Departemen</label>
-                                <input
-                                    type="text"
-                                    name="departemen"
-                                    value={editFormData.departemen}
-                                    onChange={handleEditChange}
-                                    className={inputStyle}
-                                    required
-                                />
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div className="md:col-span-2">
+                                    <label className={labelStyle}>Nama</label>
+                                    <input
+                                        type="text"
+                                        name="nama"
+                                        value={editFormData.nama}
+                                        onChange={handleEditChange}
+                                        className={inputStyle}
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label className={labelStyle}>Email</label>
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        value={editFormData.email}
+                                        onChange={handleEditChange}
+                                        className={inputStyle}
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label className={labelStyle}>
+                                        Nomor Telepon
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="nomorTelepon"
+                                        value={editFormData.nomorTelepon}
+                                        onChange={handleEditChange}
+                                        className={inputStyle}
+                                        required
+                                    />
+                                </div>
+                                <div className="md:col-span-2">
+                                    <label className={labelStyle}>Departemen</label>
+                                    <input
+                                        type="text"
+                                        name="departemen"
+                                        value={editFormData.departemen}
+                                        onChange={handleEditChange}
+                                        className={inputStyle}
+                                        required
+                                    />
+                                </div>
+                                <div className="md:col-span-2 flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        id="statusAktif"
+                                        name="statusAktif"
+                                        checked={editFormData.statusAktif}
+                                        onChange={handleEditChange}
+                                        className="h-4 w-4 text-wb-primary focus:ring-wb-secondary border-gray-300 rounded"
+                                    />
+                                    <label
+                                        htmlFor="statusAktif"
+                                        className="ml-2 block text-sm text-gray-900"
+                                    >
+                                        User Aktif
+                                    </label>
+                                </div>
                             </div>
                             <div className="flex justify-end space-x-4 mt-6">
                                 <button
