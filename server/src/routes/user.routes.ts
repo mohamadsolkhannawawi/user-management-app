@@ -95,4 +95,30 @@ router.put('/:id', async (req: Request, res: Response) => {
     }
 });
 
+// DELETE /:id - Deletes a user by their ID
+router.delete('/:id', async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const deletedUser = await prisma.user.delete({
+            where: { id: parseInt(id) },
+        });
+        res.status(200).json({
+            message: 'User deleted successfully',
+            user: deletedUser,
+        });
+    } catch (error) {
+        if (
+            error &&
+            typeof error === 'object' &&
+            'code' in error &&
+            error.code === 'P2025'
+        ) {
+            return res
+                .status(404)
+                .json({ message: 'User to delete not found' });
+        }
+        res.status(500).json({ message: 'Error deleting user', error });
+    }
+});
+
 export default router;
