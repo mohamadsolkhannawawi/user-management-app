@@ -1,5 +1,8 @@
-import express, { type Request, type Response } from 'express';
+// src/index.ts
+
+import express from 'express';
 import { PrismaClient } from '@prisma/client';
+import userRoutes from './routes/user.routes'; // Import the user routes
 
 const app = express();
 const prisma = new PrismaClient();
@@ -12,10 +15,8 @@ async function main() {
     // Middleware for parsing JSON request bodies
     app.use(express.json());
 
-    // API test route
-    app.get('/api', (req: Request, res: Response) => {
-        res.send('Hello, API is running and connected!');
-    });
+    // All routes starting with /api/users will be handled by userRoutes
+    app.use('/api/users', userRoutes);
 
     app.listen(PORT, () => {
         console.log(`Server is running on http://localhost:${PORT}`);
