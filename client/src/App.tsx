@@ -6,6 +6,7 @@ import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import UserListPage from './pages/UserListPage';
 import AddUserPage from './pages/AddUserPage';
+import EditUserPage from './pages/EditUserPage';
 
 function App() {
     return (
@@ -18,6 +19,10 @@ function App() {
                         <Route path="/" element={<HomePage />} />
                         <Route path="/users" element={<UserListPage />} />
                         <Route path="/add-user" element={<AddUserPage />} />
+                        <Route
+                            path="/edit-user/:id"
+                            element={<EditUserPage />}
+                        />
                     </Routes>
                 </main>
                 <Footer />
