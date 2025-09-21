@@ -27,24 +27,38 @@ router.get('/', async (req: Request, res: Response) => {
     }
 });
 
+// GET /:id - Fetches a single user by their ID
+router.get('/:id', async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const user = await prisma.user.findUnique({
+            where: { id: parseInt(id) }, // Convert id from string to number
+        });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching user', error });
+    }
+});
+
 // POST / - Creates a new user
 router.post('/', async (req: Request, res: Response) => {
     try {
-        // Validate request body against the schema
         const validatedData = userSchema.parse(req.body);
-
         const newUser = await prisma.user.create({
             data: validatedData,
         });
         res.status(201).json(newUser);
     } catch (error) {
-        // Handle validation errors from Zod
         if (error instanceof z.ZodError) {
             return res
                 .status(400)
                 .json({ message: 'Validation failed', errors: error.issues });
         }
-        // Handle other errors (e.g., unique constraint violation)
         res.status(500).json({ message: 'Error creating user', error });
     }
 });
