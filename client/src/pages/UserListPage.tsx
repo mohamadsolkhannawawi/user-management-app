@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-// Define the User type based on the expected data structure
+// Defines the shape of a User object
 type User = {
     id: number;
     nama: string;
@@ -19,9 +19,10 @@ const UserListPage = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [searchTerm, setSearchTerm] = useState(''); // State for the search input
 
     useEffect(() => {
-        // Function to fetch users from the backend API
+        // Fetches user data from the API when the component mounts
         const fetchUsers = async () => {
             try {
                 setLoading(true);
@@ -39,7 +40,12 @@ const UserListPage = () => {
         };
 
         fetchUsers();
-    }, []); // Empty dependency array means this effect runs once on mount
+    }, []);
+
+    // Filter users based on the search term before rendering
+    const filteredUsers = users.filter((user) =>
+        user.nama.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     if (loading) {
         return (
@@ -59,10 +65,19 @@ const UserListPage = () => {
 
     return (
         <div>
-            <h1 className="text-3xl font-bold mb-6">User List</h1>
+            <div className="flex justify-between items-center mb-6">
+                <h1 className="text-3xl font-bold">User List</h1>
+                {/* Search Input */}
+                <input
+                    type="text"
+                    placeholder="Search by name..."
+                    className="input input-bordered w-full max-w-xs"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
+            </div>
             <div className="overflow-x-auto">
                 <table className="table table-zebra">
-                    {/* head */}
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -74,7 +89,8 @@ const UserListPage = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {users.map((user) => (
+                        {/* Map over the FILTERED user list */}
+                        {filteredUsers.map((user) => (
                             <tr key={user.id}>
                                 <th>{user.id}</th>
                                 <td>{user.nama}</td>
