@@ -51,6 +51,10 @@ const UserListPage = () => {
     >('all');
     const [isFilterOpen, setIsFilterOpen] = useState(false);
 
+    // Pagination states
+    const [currentPage, setCurrentPage] = useState(1);
+    const [usersPerPage] = useState(10); // Number of users per page
+
     useEffect(() => {
         const fetchUsers = async () => {
             try {
@@ -79,7 +83,7 @@ const UserListPage = () => {
         }
     };
 
-    const processedUsers = useMemo(() => {
+    const filteredAndSortedUsers = useMemo(() => {
         return users
             .filter((user) => {
                 // Search term filter
@@ -111,6 +115,19 @@ const UserListPage = () => {
                 }
             });
     }, [users, searchTerm, statusFilter, sortOrder, sortColumn]);
+
+    // Pagination logic
+    const indexOfLastUser = currentPage * usersPerPage;
+    const indexOfFirstUser = indexOfLastUser - usersPerPage;
+    const currentUsers = filteredAndSortedUsers.slice(
+        indexOfFirstUser,
+        indexOfLastUser
+    );
+    const totalPages = Math.ceil(filteredAndSortedUsers.length / usersPerPage);
+
+    const handlePageChange = (pageNumber: number) => {
+        setCurrentPage(pageNumber);
+    };
 
     // --- DELETE LOGIC ---
     const handleDelete = async () => {
@@ -372,7 +389,7 @@ const UserListPage = () => {
                     </thead>
 
                     <tbody className="text-gray-700">
-                        {processedUsers.map((user, index) => (
+                        {currentUsers.map((user, index) => (
                             <tr
                                 key={user.id}
                                 className={`${index % 2 === 0 ? 'bg-white' : 'bg-wb-base'} text-xs md:text-sm`}
@@ -454,6 +471,34 @@ const UserListPage = () => {
                         ))}
                     </tbody>
                 </table>
+            </div>
+
+            {/* Pagination Controls */}
+            <div className="flex flex-col md:flex-row justify-between items-center mt-6 space-y-4 md:space-y-0">
+                <div className="text-gray-600 text-sm">
+                    Showing {indexOfFirstUser + 1} to{' '}
+                    {Math.min(indexOfLastUser, filteredAndSortedUsers.length)}{' '}
+                    of {filteredAndSortedUsers.length} users
+                </div>
+                <div className="flex items-center space-x-2">
+                    <button
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        Previous
+                    </button>
+                    <span className="px-4 py-2 text-sm font-medium text-gray-700">
+                        Page {currentPage} of {totalPages}
+                    </span>
+                    <button
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                        className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        Next
+                    </button>
+                </div>
             </div>
 
             {/* Delete Confirmation Modal */}
