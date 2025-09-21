@@ -3,6 +3,15 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import {
+    Pencil,
+    Trash2,
+    User,
+    Mail,
+    Hash,
+    Building,
+    Settings,
+} from 'lucide-react';
 
 type User = {
     id: number;
@@ -16,7 +25,10 @@ type User = {
 };
 
 // Define a type for the editable fields
-type UserEditData = Omit<User, 'id' | 'statusAktif' | 'createdAt' | 'updatedAt'>;
+type UserEditData = Omit<
+    User,
+    'id' | 'statusAktif' | 'createdAt' | 'updatedAt'
+>;
 
 const UserListPage = () => {
     const [users, setUsers] = useState<User[]>([]);
@@ -31,7 +43,9 @@ const UserListPage = () => {
         const fetchUsers = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get('http://localhost:5001/api/users');
+                const response = await axios.get(
+                    'http://localhost:5001/api/users'
+                );
                 setUsers(response.data);
                 setError(null);
             } catch (err) {
@@ -52,7 +66,9 @@ const UserListPage = () => {
     const handleDelete = async () => {
         if (!userToDelete) return;
         try {
-            await axios.delete(`http://localhost:5001/api/users/${userToDelete.id}`);
+            await axios.delete(
+                `http://localhost:5001/api/users/${userToDelete.id}`
+            );
             setUsers(users.filter((user) => user.id !== userToDelete.id));
             toast.success(`User "${userToDelete.nama}" deleted successfully!`);
         } catch (err) {
@@ -87,12 +103,19 @@ const UserListPage = () => {
         if (!userToEdit || !editFormData) return;
 
         try {
-            const response = await axios.put(`http://localhost:5001/api/users/${userToEdit.id}`, editFormData);
+            const response = await axios.put(
+                `http://localhost:5001/api/users/${userToEdit.id}`,
+                editFormData
+            );
             const updatedUser = response.data;
-            
+
             // Update the user in the list
-            setUsers(users.map(user => user.id === updatedUser.id ? updatedUser : user));
-            
+            setUsers(
+                users.map((user) =>
+                    user.id === updatedUser.id ? updatedUser : user
+                )
+            );
+
             toast.success(`User "${updatedUser.nama}" updated successfully!`);
             setUserToEdit(null); // Close modal
             setEditFormData(null);
@@ -101,7 +124,6 @@ const UserListPage = () => {
             console.error(err);
         }
     };
-
 
     if (loading) {
         return (
@@ -113,19 +135,25 @@ const UserListPage = () => {
 
     if (error) {
         return (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative" role="alert">
+            <div
+                className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative"
+                role="alert"
+            >
                 {error}
             </div>
         );
     }
 
-    const inputStyle = "w-full p-3 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-wb-secondary";
-    const labelStyle = "block text-gray-700 text-sm font-bold mb-2";
+    const inputStyle =
+        'w-full p-3 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-wb-secondary';
+    const labelStyle = 'block text-gray-700 text-sm font-bold mb-2';
 
     return (
         <div className="p-8 bg-wb-base rounded-lg shadow-md">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
-                <h1 className="text-3xl font-bold text-wb-primary">User List</h1>
+                <h1 className="text-3xl font-bold text-wb-primary">
+                    User List
+                </h1>
                 <input
                     type="text"
                     placeholder="Search by name..."
@@ -135,27 +163,57 @@ const UserListPage = () => {
                 />
             </div>
             <div className="overflow-x-auto rounded-lg shadow">
-                <table className="w-full text-left">
-                    <thead className="bg-wb-accent text-wb-primary uppercase text-sm">
+                <table className="w-full text-left text-xs md:text-base">
+                    <thead className="bg-wb-accent text-wb-primary uppercase text-xs md:text-sm">
                         <tr>
-                            <th className="p-3">ID</th>
-                            <th className="p-3">Nama</th>
-                            <th className="p-3">Email</th>
-                            <th className="p-3">Departemen</th>
-                            <th className="p-3">Status</th>
-                            <th className="p-3">Actions</th>
+                            <th className="p-3 whitespace-nowrap">
+                                <div className="flex items-center gap-2">
+                                    <Hash size={16} /> ID
+                                </div>
+                            </th>
+                            <th className="p-3 whitespace-nowrap">
+                                <div className="flex items-center gap-2">
+                                    <User size={16} />
+                                    <span className="md:hidden">
+                                        Nama & Email
+                                    </span>
+                                    <span className="hidden md:inline">
+                                        Nama
+                                    </span>
+                                </div>
+                            </th>
+                            <th className="p-3 whitespace-nowrap hidden md:table-cell">
+                                <div className="flex items-center gap-2">
+                                    <Mail size={16} /> Email
+                                </div>
+                            </th>
+                            <th className="p-3 whitespace-nowrap hidden md:table-cell">
+                                <div className="flex items-center justify-center gap-2">
+                                    <Settings size={16} /> Status
+                                </div>
+                            </th>
+                            <th className="p-3 text-center whitespace-nowrap">
+                                <div className="flex items-center justify-center gap-2">
+                                    <Settings size={16} /> Aksi
+                                </div>
+                            </th>
                         </tr>
                     </thead>
                     <tbody className="text-gray-700">
                         {filteredUsers.map((user, index) => (
-                            <tr key={user.id} className={index % 2 === 0 ? 'bg-white' : 'bg-wb-base'}>
-                                <td className="p-3 font-semibold">{user.id}</td>
-                                <td className="p-3">{user.nama}</td>
-                                <td className="p-3">{user.email}</td>
-                                <td className="p-3">{user.departemen}</td>
-                                <td className="p-3">
+                            <tr
+                                key={user.id}
+                                className={`${index % 2 === 0 ? 'bg-white' : 'bg-wb-base'} text-xs md:text-sm`}
+                            >
+                                <td className="p-3 font-semibold md:align-middle">{user.id}</td>
+                                <td className="p-3 align-top md:align-middle">
+                                    <div className="font-semibold">{user.nama}</div>
+                                    <div className="text-gray-500 md:hidden">{user.email}</div>
+                                </td>
+                                <td className="p-3 hidden md:table-cell align-middle">{user.email}</td>
+                                <td className="p-3 hidden md:table-cell text-center align-middle">
                                     <span
-                                        className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                                        className={`px-3 py-1.5 text-center font-semibold rounded-md ${
                                             user.statusAktif
                                                 ? 'bg-green-200 text-green-800'
                                                 : 'bg-gray-200 text-gray-800'
@@ -164,19 +222,35 @@ const UserListPage = () => {
                                         {user.statusAktif ? 'Aktif' : 'Non-Aktif'}
                                     </span>
                                 </td>
-                                <td className="p-3 space-x-2 whitespace-nowrap">
-                                    <button 
-                                        className="bg-wb-secondary text-white px-3 py-1 rounded-md hover:bg-wb-primary text-sm"
-                                        onClick={() => handleOpenEditModal(user)}
-                                    >
-                                        Edit
-                                    </button>
-                                    <button
-                                        className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 text-sm"
-                                        onClick={() => setUserToDelete(user)}
-                                    >
-                                        Delete
-                                    </button>
+                                <td className="p-3 align-middle">
+                                    <div className="flex flex-col items-stretch gap-y-2">
+                                        {/* On small screens, show status here */}
+                                        <span
+                                            className={`md:hidden px-3 py-1.5 text-center font-semibold rounded-md ${
+                                                user.statusAktif
+                                                    ? 'bg-green-200 text-green-800'
+                                                    : 'bg-gray-200 text-gray-800'
+                                            }`}
+                                        >
+                                            {user.statusAktif ? 'Aktif' : 'Non-Aktif'}
+                                        </span>
+                                        <div className="flex flex-col md:flex-row items-stretch md:items-center md:justify-center gap-2">
+                                            <button 
+                                                className="flex items-center justify-center gap-2 bg-wb-secondary text-white px-3 py-1.5 rounded-md hover:bg-wb-primary"
+                                                onClick={() => handleOpenEditModal(user)}
+                                            >
+                                                <Pencil size={14} />
+                                                <span>Edit</span>
+                                            </button>
+                                            <button
+                                                className="flex items-center justify-center gap-2 bg-red-500 text-white px-3 py-1.5 rounded-md hover:bg-red-600"
+                                                onClick={() => setUserToDelete(user)}
+                                            >
+                                                <Trash2 size={14} />
+                                                <span>Delete</span>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         ))}
@@ -188,9 +262,12 @@ const UserListPage = () => {
             {userToDelete && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
                     <div className="bg-white p-8 rounded-lg shadow-2xl max-w-sm w-full">
-                        <h3 className="font-bold text-lg text-wb-primary">Confirm Deletion</h3>
+                        <h3 className="font-bold text-lg text-wb-primary">
+                            Confirm Deletion
+                        </h3>
                         <p className="py-4 text-gray-700">
-                            Are you sure you want to delete user "{userToDelete.nama}"?
+                            Are you sure you want to delete user "
+                            {userToDelete.nama}"?
                         </p>
                         <div className="flex justify-end space-x-4 mt-4">
                             <button
@@ -212,9 +289,11 @@ const UserListPage = () => {
 
             {/* Edit User Modal */}
             {userToEdit && editFormData && (
-                 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
                     <div className="bg-white p-8 rounded-lg shadow-2xl max-w-lg w-full">
-                        <h3 className="font-bold text-2xl mb-6 text-wb-primary">Edit User</h3>
+                        <h3 className="font-bold text-2xl mb-6 text-wb-primary">
+                            Edit User
+                        </h3>
                         <form onSubmit={handleEditSubmit}>
                             <div className="mb-4">
                                 <label className={labelStyle}>Nama</label>
@@ -239,7 +318,9 @@ const UserListPage = () => {
                                 />
                             </div>
                             <div className="mb-4">
-                                <label className={labelStyle}>Nomor Telepon</label>
+                                <label className={labelStyle}>
+                                    Nomor Telepon
+                                </label>
                                 <input
                                     type="text"
                                     name="nomorTelepon"
@@ -284,4 +365,3 @@ const UserListPage = () => {
 };
 
 export default UserListPage;
-''
