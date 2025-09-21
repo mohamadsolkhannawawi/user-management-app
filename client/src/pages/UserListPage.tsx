@@ -88,7 +88,7 @@ const UserListPage = () => {
 
     return (
         <div>
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
                 <h1 className="text-3xl font-bold">User List</h1>
                 {/* Search Input */}
                 <input
