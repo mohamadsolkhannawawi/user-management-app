@@ -1,0 +1,45 @@
+["INFO" - 10:44:36 AM] Formatting file:///d%3A/user-management-app/.prettierrc
+["INFO" - 10:44:36 AM] Attempted to determine module path from d:\user-management-app
+["ERROR" - 10:44:36 AM] Failed to load module. If you have prettier or plugins referenced in package.json, ensure you have run `npm install`
+["ERROR" - 10:44:36 AM] Cannot find module 'prettier' from 'd:\user-management-app'
+Error: Cannot find module 'prettier' from 'd:\user-management-app'
+    at e.exports [as sync] (c:\Users\HP\.vscode\extensions\esbenp.prettier-vscode-11.0.0\dist\extension.js:1:38498)
+    at t.ModuleResolver.findPkg (c:\Users\HP\.vscode\extensions\esbenp.prettier-vscode-11.0.0\dist\extension.js:1:8434)
+    at t.ModuleResolver.getPrettierInstance (c:\Users\HP\.vscode\extensions\esbenp.prettier-vscode-11.0.0\dist\extension.js:1:4571)
+    at t.ModuleResolver.getResolvedConfig (c:\Users\HP\.vscode\extensions\esbenp.prettier-vscode-11.0.0\dist\extension.js:1:7643)
+    at t.default.format (c:\Users\HP\.vscode\extensions\esbenp.prettier-vscode-11.0.0\dist\extension.js:1:14844)
+    at t.PrettierEditProvider.provideEdits (c:\Users\HP\.vscode\extensions\esbenp.prettier-vscode-11.0.0\dist\extension.js:1:12938)
+    at t.PrettierEditProvider.provideDocumentFormattingEdits (c:\Users\HP\.vscode\extensions\esbenp.prettier-vscode-11.0.0\dist\extension.js:1:9069)
+    at aD.provideDocumentFormattingEdits (file:///c:/Users/HP/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:140:137299)
+    at file:///c:/Users/HP/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:140:162136
+    at Kt.G (file:///c:/Users/HP/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:140:156654)
+    at Kt.$provideDocumentFormattingEdits (file:///c:/Users/HP/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:140:162124)
+    at j4.S (file:///c:/Users/HP/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:29:120180)
+    at j4.Q (file:///c:/Users/HP/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:29:119960)
+    at j4.M (file:///c:/Users/HP/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:29:119011)
+    at j4.L (file:///c:/Users/HP/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:29:118154)
+    at od.value (file:///c:/Users/HP/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:29:116951)
+    at $.C (file:///c:/Users/HP/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:27:2373)
+    at $.fire (file:///c:/Users/HP/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:27:2591)
+    at vo.fire (file:///c:/Users/HP/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:29:9458)
+    at od.value (file:///c:/Users/HP/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:391:8617)
+    at $.C (file:///c:/Users/HP/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:27:2373)
+    at $.fire (file:///c:/Users/HP/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:27:2591)
+    at vo.fire (file:///c:/Users/HP/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:29:9458)
+    at MessagePortMain.<anonymous> (file:///c:/Users/HP/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:391:6909)
+    at MessagePortMain.emit (node:events:518:28)
+    at MessagePortMain.emit (node:domain:489:12)
+    at Object.MessagePortMain._internalPort.emit (node:electron/js2c/utility_init:2:2949)
+["INFO" - 10:44:36 AM] Using config file at d:\user-management-app\.prettierrc
+["INFO" - 10:44:36 AM] Attempted to determine module path from d:\user-management-app
+["ERROR" - 10:44:36 AM] Failed to load module. If you have prettier or plugins referenced in package.json, ensure you have run `npm install`
+["ERROR" - 10:44:36 AM] Cannot find module 'prettier' from 'd:\user-management-app'
+Error: Cannot find module 'prettier' from 'd:\user-management-app'
+    at e.exports [as sync] (c:\Users\HP\.vscode\extensions\esbenp.prettier-vscode-11.0.0\dist\extension.js:1:38498)
+    at t.ModuleResolver.findPkg (c:\Users\HP\.vscode\extensions\esbenp.prettier-vscode-11.0.0\dist\extension.js:1:8434)
+    at t.ModuleResolver.getPrettierInstance (c:\Users\HP\.vscode\extensions\esbenp.prettier-vscode-11.0.0\dist\extension.js:1:4571)
+    at t.default.format (c:\Users\HP\.vscode\extensions\esbenp.prettier-vscode-11.0.0\dist\extension.js:1:15055)
+    at t.PrettierEditProvider.provideEdits (c:\Users\HP\.vscode\extensions\esbenp.prettier-vscode-11.0.0\dist\extension.js:1:12927)
+    at aD.provideDocumentFormattingEdits (file:///c:/Users/HP/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:140:137286)
+["INFO" - 10:44:36 AM] PrettierInstance:
+["ERROR" - 10:44:36 AM] Prettier could not be loaded. See previous logs for more information.
