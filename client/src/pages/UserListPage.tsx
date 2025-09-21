@@ -105,7 +105,8 @@ const UserListPage = () => {
                     if (nameA < nameB) return isAsc ? -1 : 1;
                     if (nameA > nameB) return isAsc ? 1 : -1;
                     return 0;
-                } else { // sort by ID
+                } else {
+                    // sort by ID
                     return isAsc ? a.id - b.id : b.id - a.id;
                 }
             });
@@ -304,11 +305,21 @@ const UserListPage = () => {
                                 <div className="flex items-center gap-2">
                                     <Hash size={16} />
                                     <span>ID</span>
-                                    <button onClick={() => handleSort('id')} className="ml-2">
+                                    <button
+                                        onClick={() => handleSort('id')}
+                                        className="ml-2"
+                                    >
                                         {sortColumn === 'id' ? (
-                                            sortOrder === 'asc' ? <ArrowDown01 size={16} /> : <ArrowDown10 size={16} />
+                                            sortOrder === 'asc' ? (
+                                                <ArrowDown01 size={16} />
+                                            ) : (
+                                                <ArrowDown10 size={16} />
+                                            )
                                         ) : (
-                                            <ArrowDown01 size={16} className="text-gray-400" />
+                                            <ArrowDown01
+                                                size={16}
+                                                className="text-gray-400"
+                                            />
                                         )}
                                     </button>
                                 </div>
@@ -322,11 +333,21 @@ const UserListPage = () => {
                                     <span className="hidden md:inline">
                                         Nama
                                     </span>
-                                    <button onClick={() => handleSort('nama')} className="ml-2">
+                                    <button
+                                        onClick={() => handleSort('nama')}
+                                        className="ml-2"
+                                    >
                                         {sortColumn === 'nama' ? (
-                                            sortOrder === 'asc' ? <ArrowDownAZ size={16} /> : <ArrowDownZA size={16} />
+                                            sortOrder === 'asc' ? (
+                                                <ArrowDownAZ size={16} />
+                                            ) : (
+                                                <ArrowDownZA size={16} />
+                                            )
                                         ) : (
-                                            <ArrowDownAZ size={16} className="text-gray-400" />
+                                            <ArrowDownAZ
+                                                size={16}
+                                                className="text-gray-400"
+                                            />
                                         )}
                                     </button>
                                 </div>
@@ -336,6 +357,7 @@ const UserListPage = () => {
                                     <Mail size={16} /> Email
                                 </div>
                             </th>
+                            {/* Status hanya muncul di md ke atas */}
                             <th className="p-3 whitespace-nowrap hidden md:table-cell">
                                 <div className="flex items-center justify-center gap-2">
                                     <UserRoundCheck size={16} /> Status
@@ -348,52 +370,79 @@ const UserListPage = () => {
                             </th>
                         </tr>
                     </thead>
+
                     <tbody className="text-gray-700">
                         {processedUsers.map((user, index) => (
                             <tr
                                 key={user.id}
                                 className={`${index % 2 === 0 ? 'bg-white' : 'bg-wb-base'} text-xs md:text-sm`}
                             >
-                                <td className="p-3 font-semibold md:align-middle">{user.id}</td>
-                                <td className="p-3 align-top md:align-middle">
-                                    <div className="font-semibold">{user.nama}</div>
-                                    <div className="text-gray-500 md:hidden">{user.email}</div>
+                                <td className="p-3 font-semibold md:align-middle">
+                                    {user.id}
                                 </td>
-                                <td className="p-3 hidden md:table-cell align-middle">{user.email}</td>
+
+                                <td className="p-3 md:align-middle">
+                                    <div className="flex flex-col justify-center md:block">
+                                        <span className="font-semibold">
+                                            {user.nama}
+                                        </span>
+                                        <span className="text-gray-500 md:hidden">
+                                            {user.email}
+                                        </span>
+                                    </div>
+                                </td>
+
+                                <td className="p-3 hidden md:table-cell align-middle">
+                                    {user.email}
+                                </td>
+
+                                {/* Status hanya md ke atas */}
                                 <td className="p-3 hidden md:table-cell text-center align-middle">
                                     <span
-                                        className={`px-3 py-1.5 text-center font-semibold rounded-md ${
+                                        className={`px-2 py-1 text-center font-semibold rounded-md text-xs md:text-sm ${
                                             user.statusAktif
                                                 ? 'bg-green-200 text-green-800'
                                                 : 'bg-gray-200 text-gray-800'
                                         }`}
                                     >
-                                        {user.statusAktif ? 'Aktif' : 'Non-Aktif'}
+                                        {user.statusAktif
+                                            ? 'Aktif'
+                                            : 'Non-Aktif'}
                                     </span>
                                 </td>
+
+                                {/* Aksi + Status untuk mobile */}
                                 <td className="p-3 align-middle">
                                     <div className="flex flex-col items-stretch gap-y-2">
-                                        {/* On small screens, show status here */}
+                                        {/* Status tampil di mobile */}
                                         <span
-                                            className={`md:hidden px-3 py-1.5 text-center font-semibold rounded-md ${
+                                            className={`md:hidden px-2 py-1 text-xs font-semibold rounded-md text-center ${
                                                 user.statusAktif
                                                     ? 'bg-green-200 text-green-800'
                                                     : 'bg-gray-200 text-gray-800'
                                             }`}
                                         >
-                                            {user.statusAktif ? 'Aktif' : 'Non-Aktif'}
+                                            {user.statusAktif
+                                                ? 'Aktif'
+                                                : 'Non-Aktif'}
                                         </span>
+
+                                        {/* Tombol aksi */}
                                         <div className="flex flex-col md:flex-row items-stretch md:items-center md:justify-center gap-2">
-                                            <button 
+                                            <button
                                                 className="flex items-center justify-center gap-2 bg-wb-secondary text-white px-3 py-1.5 rounded-md hover:bg-wb-primary"
-                                                onClick={() => handleOpenEditModal(user)}
+                                                onClick={() =>
+                                                    handleOpenEditModal(user)
+                                                }
                                             >
                                                 <Pencil size={14} />
                                                 <span>Edit</span>
                                             </button>
                                             <button
                                                 className="flex items-center justify-center gap-2 bg-red-500 text-white px-3 py-1.5 rounded-md hover:bg-red-600"
-                                                onClick={() => setUserToDelete(user)}
+                                                onClick={() =>
+                                                    setUserToDelete(user)
+                                                }
                                             >
                                                 <Trash2 size={14} />
                                                 <span>Delete</span>
@@ -410,7 +459,7 @@ const UserListPage = () => {
             {/* Delete Confirmation Modal */}
             {userToDelete && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-                    <div className="bg-white p-8 rounded-lg shadow-2xl max-w-sm w-full">
+                    <div className="bg-white p-6 rounded-lg shadow-2xl w-full max-w-sm md:max-w-md mx-4 max-h-[90vh] overflow-y-auto">
                         <h3 className="font-bold text-lg text-wb-primary">
                             Confirm Deletion
                         </h3>
@@ -439,7 +488,7 @@ const UserListPage = () => {
             {/* Edit User Modal */}
             {userToEdit && editFormData && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-                    <div className="bg-white p-8 rounded-lg shadow-2xl max-w-lg w-full">
+                    <div className="bg-white p-6 rounded-lg shadow-2xl w-full max-w-sm md:max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
                         <h3 className="font-bold text-2xl mb-6 text-wb-primary">
                             Edit User
                         </h3>
@@ -481,7 +530,9 @@ const UserListPage = () => {
                                     />
                                 </div>
                                 <div className="md:col-span-2">
-                                    <label className={labelStyle}>Departemen</label>
+                                    <label className={labelStyle}>
+                                        Departemen
+                                    </label>
                                     <input
                                         type="text"
                                         name="departemen"
