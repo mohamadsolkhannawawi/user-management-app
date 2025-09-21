@@ -1,4 +1,6 @@
+// src/App.tsx
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
@@ -8,6 +10,7 @@ import AddUserPage from './pages/AddUserPage';
 function App() {
     return (
         <Router>
+            <Toaster position="top-right" /> {/* Add Toaster component */}
             <div className="flex flex-col min-h-screen">
                 <Navbar />
                 <main className="flex-grow container mx-auto px-4 py-8">
@@ -22,5 +25,4 @@ function App() {
         </Router>
     );
 }
-
 export default App;

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 // Defines the shape of a User object
 type User = {
@@ -20,6 +21,7 @@ const UserListPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState(''); // State for the search input
+    const [userToDelete, setUserToDelete] = useState<User | null>(null); // State for the user to be deleted
 
     useEffect(() => {
         // Fetches user data from the API when the component mounts
@@ -46,6 +48,26 @@ const UserListPage = () => {
     const filteredUsers = users.filter((user) =>
         user.nama.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    // Function to handle the delete confirmation
+    const handleDelete = async () => {
+        if (!userToDelete) return;
+
+        try {
+            await axios.delete(
+                `http://localhost:5001/api/users/${userToDelete.id}`
+            );
+            // Update UI instantly by removing the user from the state
+            setUsers(users.filter((user) => user.id !== userToDelete.id));
+            toast.success(`User "${userToDelete.nama}" deleted successfully!`);
+        } catch (err) {
+            toast.error('Failed to delete user.');
+            console.error(err);
+        } finally {
+            // Close the modal
+            setUserToDelete(null);
+        }
+    };
 
     if (loading) {
         return (
@@ -109,7 +131,10 @@ const UserListPage = () => {
                                     <button className="btn btn-sm btn-info">
                                         Edit
                                     </button>
-                                    <button className="btn btn-sm btn-error">
+                                    <button
+                                        className="btn btn-sm btn-error"
+                                        onClick={() => setUserToDelete(user)}
+                                    >
                                         Delete
                                     </button>
                                 </td>
@@ -118,6 +143,33 @@ const UserListPage = () => {
                     </tbody>
                 </table>
             </div>
+
+            {/* Confirmation Modal */}
+            {userToDelete && (
+                <dialog className="modal modal-open">
+                    <div className="modal-box">
+                        <h3 className="font-bold text-lg">Confirm Deletion</h3>
+                        <p className="py-4">
+                            Are you sure you want to delete user "
+                            {userToDelete.nama}"?
+                        </p>
+                        <div className="modal-action">
+                            <button
+                                className="btn"
+                                onClick={() => setUserToDelete(null)}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                className="btn btn-error"
+                                onClick={handleDelete}
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </dialog>
+            )}
         </div>
     );
 };
