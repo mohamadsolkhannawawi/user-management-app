@@ -173,9 +173,32 @@ const UserListPage = () => {
         }
     };
 
+    // Helper function to validate email format
+    const validateEmail = (email: string): boolean => {
+        const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return re.test(String(email).toLowerCase());
+    };
+
+    // Helper function to validate phone number format (simple check for digits and optional +)
+    const validatePhoneNumber = (phoneNumber: string): boolean => {
+        const re = /^\+?[0-9]{7,15}$/; // Allows optional '+' and 7-15 digits
+        return re.test(String(phoneNumber));
+    };
+
     const handleEditSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!userToEdit || !editFormData) return;
+
+        // Client-side validation
+        if (!validateEmail(editFormData.email)) {
+            toast.error('Invalid email format.');
+            return;
+        }
+
+        if (!validatePhoneNumber(editFormData.nomorTelepon)) {
+            toast.error('Please enter a valid phone number.');
+            return;
+        }
 
         try {
             const response = await axios.put(
@@ -193,9 +216,18 @@ const UserListPage = () => {
             toast.success(`User "${updatedUser.nama}" updated successfully!`);
             setUserToEdit(null);
             setEditFormData(null);
-        } catch (err) {
-            toast.error('Failed to update user.');
+        } catch (err: unknown) {
             console.error(err);
+            let errorMessage = 'Failed to update user. Please check your input.';
+            if (axios.isAxiosError(err) && err.response) {
+                if (err.response.data.message === 'Email already in use') {
+                    errorMessage =
+                        'Email already in use, please use another email.';
+                } else {
+                    errorMessage = err.response?.data?.message || errorMessage;
+                }
+            }
+            toast.error(errorMessage);
         }
     };
 

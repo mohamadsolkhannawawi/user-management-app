@@ -17,6 +17,18 @@ const AddUserPage = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    // Helper function to validate email format
+    const validateEmail = (email: string): boolean => {
+        const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return re.test(String(email).toLowerCase());
+    };
+
+    // Helper function to validate phone number format
+    const validatePhoneNumber = (phoneNumber: string): boolean => {
+        const re = /^\+?[0-9]{7,15}$/; // Allows optional '+' and 7-15 digits
+        return re.test(String(phoneNumber));
+    };
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, type, checked } = e.target;
         setFormData({
@@ -29,15 +41,39 @@ const AddUserPage = () => {
         e.preventDefault();
         setIsSubmitting(true);
         setError(null);
+
+        // Client-side validation
+        if (!validateEmail(formData.email)) {
+            const errorMessage = 'Invalid email format.';
+            setError(errorMessage);
+            toast.error(errorMessage);
+            setIsSubmitting(false);
+            return;
+        }
+
+        if (!validatePhoneNumber(formData.nomorTelepon)) {
+            const errorMessage = 'Please enter a valid phone number.';
+            setError(errorMessage);
+            toast.error(errorMessage);
+            setIsSubmitting(false);
+            return;
+        }
+
         try {
             await axios.post('http://localhost:5001/api/users', formData);
             toast.success('User added successfully!');
             navigate('/users');
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error(err);
-            const errorMessage =
-                err.response?.data?.message ||
-                'Failed to add user. Please check your input.';
+            let errorMessage = 'Failed to add user. Please check your input.';
+            if (axios.isAxiosError(err) && err.response) {
+                if (err.response.data.message === 'Email already in use') {
+                    errorMessage =
+                        'Email already in use, please use another email.';
+                } else {
+                    errorMessage = err.response?.data?.message || errorMessage;
+                }
+            }
             setError(errorMessage);
             toast.error(errorMessage);
         } finally {

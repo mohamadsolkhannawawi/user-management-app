@@ -59,6 +59,16 @@ router.post('/', async (req: Request, res: Response) => {
                 .status(400)
                 .json({ message: 'Validation failed', errors: error.issues });
         }
+        if (
+            error &&
+            typeof error === 'object' &&
+            'code' in error &&
+            error.code === 'P2002'
+        ) {
+            return res
+                .status(409)
+                .json({ message: 'Email already in use' });
+        }
         res.status(500).json({ message: 'Error creating user', error });
     }
 });
@@ -91,6 +101,17 @@ router.put('/:id', async (req: Request, res: Response) => {
             return res
                 .status(404)
                 .json({ message: 'User to update not found' });
+        }
+        // Type guard to check if the error is a Prisma error for unique constraint
+        if (
+            error &&
+            typeof error === 'object' &&
+            'code' in error &&
+            error.code === 'P2002'
+        ) {
+            return res
+                .status(409)
+                .json({ message: 'Email already in use' });
         }
         res.status(500).json({ message: 'Error updating user', error });
     }
