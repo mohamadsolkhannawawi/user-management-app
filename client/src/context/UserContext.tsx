@@ -100,7 +100,12 @@ export const UserProvider = ({ children }: UserProviderProps) => {
             let errorMessage = 'Failed to add user. Please check your input.';
             // Check if the error is an Axios error and extract a more specific message.
             if (axios.isAxiosError(err) && err.response) {
-                if (err.response.data.message === 'Email already in use') {
+                if (
+                    err.response.data.message &&
+                    err.response.data.message
+                        .toLowerCase()
+                        .includes('email already in use')
+                ) {
                     errorMessage =
                         'Email already in use, please use another email.';
                 } else {
@@ -126,14 +131,15 @@ export const UserProvider = ({ children }: UserProviderProps) => {
         try {
             const updatedUser = await userService.updateUser(id, userData); // Call the API to update a user.
             setUsers((prevUsers) =>
-                prevUsers.map((user) =>
-                    user.id === updatedUser.id ? updatedUser : user // Replace the old user with the updated one.
+                prevUsers.map(
+                    (user) => (user.id === updatedUser.id ? updatedUser : user) // Replace the old user with the updated one.
                 )
             );
             toast.success(`User "${updatedUser.nama}" updated successfully!`); // Display a success toast.
         } catch (err: unknown) {
             console.error(err);
-            let errorMessage = 'Failed to update user. Please check your input.';
+            let errorMessage =
+                'Failed to update user. Please check your input.';
             // Check if the error is an Axios error and extract a more specific message.
             if (axios.isAxiosError(err) && err.response) {
                 if (err.response.data.message === 'Email already in use') {

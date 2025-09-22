@@ -82,15 +82,11 @@ const AddUserPage = () => {
             await addUser(formData);
             // Navigate to the user list page on successful addition.
             navigate('/users');
-            // Display a success toast notification.
-            toast.success('User added successfully!');
         } catch (err: any) {
             // Extract error message from API response or provide a generic one.
             const message =
                 err.response?.data?.message || 'An unexpected error occurred.';
             setError(message); // Set error state to display the message.
-            // Display an error toast notification.
-            toast.error(message);
         } finally {
             setIsSubmitting(false); // Reset submitting state regardless of success or failure.
         }
@@ -254,7 +250,8 @@ const AddUserPage = () => {
                             {isSubmitting && (
                                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div> // Loading spinner.
                             )}
-                            {isSubmitting ? 'Submitting...' : 'Submit'} {/* Button text changes based on submission status. */}
+                            {isSubmitting ? 'Submitting...' : 'Submit'}{' '}
+                            {/* Button text changes based on submission status. */}
                         </button>
                     </form>
                 </div>

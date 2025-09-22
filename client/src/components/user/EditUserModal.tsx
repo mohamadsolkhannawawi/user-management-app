@@ -103,13 +103,11 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
             await updateUser(userToEdit.id, editFormData); // Calls the updateUser function with the user's ID and updated data.
             setUserToEdit(null); // Closes the modal on successful update.
             setEditFormData(null); // Clears form data.
-            toast.success('User updated successfully!'); // Display success toast.
         } catch (err: any) {
             // Extracts error message from the API response or provides a generic message.
             const message =
                 err.response?.data?.message || 'An unexpected error occurred.';
             setError(message); // Sets the error state to display the message.
-            toast.error(message); // Display error toast.
         }
     };
 
