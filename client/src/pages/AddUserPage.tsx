@@ -42,7 +42,8 @@ const AddUserPage = () => {
         }
 
         if (!validatePhoneNumber(formData.nomorTelepon)) {
-            const errorMessage = 'Phone number is invalid. It must be 10-15 digits.';
+            const errorMessage =
+                'Phone number is invalid. It must be 10-15 digits.';
             setError(errorMessage);
             toast.error(errorMessage);
             setIsSubmitting(false);
@@ -53,7 +54,8 @@ const AddUserPage = () => {
             await addUser(formData); // Use addUser from context
             navigate('/users');
         } catch (err: any) {
-            const message = err.response?.data?.message || 'An unexpected error occurred.';
+            const message =
+                err.response?.data?.message || 'An unexpected error occurred.';
             setError(message);
             // The toast is already handled by the context
         } finally {

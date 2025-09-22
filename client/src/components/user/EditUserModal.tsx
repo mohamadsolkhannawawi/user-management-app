@@ -8,7 +8,6 @@ import type { User, UserEditData } from '../../types/user';
 
 // Define User type (should match backend)
 
-
 interface EditUserModalProps {
     userToEdit: User | null;
     setUserToEdit: (user: User | null) => void;
@@ -73,7 +72,8 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
             setUserToEdit(null); // Close modal on success
             setEditFormData(null);
         } catch (err: any) {
-            const message = err.response?.data?.message || 'An unexpected error occurred.';
+            const message =
+                err.response?.data?.message || 'An unexpected error occurred.';
             setError(message);
             // The toast is already handled by the context
         }
@@ -155,7 +155,10 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
                         </div>
                     </div>
                     {error && (
-                        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative mb-4" role="alert">
+                        <div
+                            className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative mb-4"
+                            role="alert"
+                        >
                             {error}
                         </div>
                     )}
