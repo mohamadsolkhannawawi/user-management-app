@@ -1,12 +1,14 @@
 // src/pages/AddUserPage.tsx
 
 import { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { validateEmail, validatePhoneNumber } from '../utils/validation';
+import { useUser } from '../context/UserContext';
 
 const AddUserPage = () => {
     const navigate = useNavigate();
+    const { addUser } = useUser(); // Use addUser from context
     const [formData, setFormData] = useState({
         nama: '',
         email: '',
@@ -15,19 +17,7 @@ const AddUserPage = () => {
         statusAktif: true, // Default to active
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-
-    // Helper function to validate email format
-    const validateEmail = (email: string): boolean => {
-        const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        return re.test(String(email).toLowerCase());
-    };
-
-    // Helper function to validate phone number format
-    const validatePhoneNumber = (phoneNumber: string): boolean => {
-        const re = /^\+?[0-9]{7,15}$/; // Allows optional '+' and 7-15 digits
-        return re.test(String(phoneNumber));
-    };
+    const [error, setError] = useState<string | null>(null); // Keep local error for form validation
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, type, checked } = e.target;
@@ -52,7 +42,7 @@ const AddUserPage = () => {
         }
 
         if (!validatePhoneNumber(formData.nomorTelepon)) {
-            const errorMessage = 'Please enter a valid phone number.';
+            const errorMessage = 'Phone number is invalid. It must be 10-15 digits.';
             setError(errorMessage);
             toast.error(errorMessage);
             setIsSubmitting(false);
@@ -60,22 +50,12 @@ const AddUserPage = () => {
         }
 
         try {
-            await axios.post('http://localhost:5001/api/users', formData);
-            toast.success('User added successfully!');
+            await addUser(formData); // Use addUser from context
             navigate('/users');
-        } catch (err: unknown) {
-            console.error(err);
-            let errorMessage = 'Failed to add user. Please check your input.';
-            if (axios.isAxiosError(err) && err.response) {
-                if (err.response.data.message === 'Email already in use') {
-                    errorMessage =
-                        'Email already in use, please use another email.';
-                } else {
-                    errorMessage = err.response?.data?.message || errorMessage;
-                }
-            }
-            setError(errorMessage);
-            toast.error(errorMessage);
+        } catch (err: any) {
+            const message = err.response?.data?.message || 'An unexpected error occurred.';
+            setError(message);
+            // The toast is already handled by the context
         } finally {
             setIsSubmitting(false);
         }
