@@ -345,10 +345,10 @@ const UserListPage = () => {
                                 <div className="flex items-center gap-2">
                                     <User size={16} />
                                     <span className="md:hidden">
-                                        Nama & Email
+                                        Name & Email
                                     </span>
                                     <span className="hidden md:inline">
-                                        Nama
+                                        Name
                                     </span>
                                     <button
                                         onClick={() => handleSort('nama')}
@@ -382,7 +382,7 @@ const UserListPage = () => {
                             </th>
                             <th className="p-3 text-center whitespace-nowrap">
                                 <div className="flex items-center justify-center gap-2">
-                                    <Settings size={16} /> Aksi
+                                    <Settings size={16} /> Actions
                                 </div>
                             </th>
                         </tr>
@@ -423,8 +423,8 @@ const UserListPage = () => {
                                         }`}
                                     >
                                         {user.statusAktif
-                                            ? 'Aktif'
-                                            : 'Non-Aktif'}
+                                            ? 'Active'
+                                            : 'Inactive'}
                                     </span>
                                 </td>
 
@@ -440,8 +440,8 @@ const UserListPage = () => {
                                             }`}
                                         >
                                             {user.statusAktif
-                                                ? 'Aktif'
-                                                : 'Non-Aktif'}
+                                                ? 'Active'
+                                                : 'Inactive'}
                                         </span>
 
                                         {/* Tombol aksi */}
@@ -540,7 +540,7 @@ const UserListPage = () => {
                         <form onSubmit={handleEditSubmit}>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                 <div className="md:col-span-2">
-                                    <label className={labelStyle}>Nama</label>
+                                    <label className={labelStyle}>Name</label>
                                     <input
                                         type="text"
                                         name="nama"
@@ -563,7 +563,7 @@ const UserListPage = () => {
                                 </div>
                                 <div>
                                     <label className={labelStyle}>
-                                        Nomor Telepon
+                                        Phone Number
                                     </label>
                                     <input
                                         type="text"
@@ -576,7 +576,7 @@ const UserListPage = () => {
                                 </div>
                                 <div className="md:col-span-2">
                                     <label className={labelStyle}>
-                                        Departemen
+                                        Department
                                     </label>
                                     <input
                                         type="text"
@@ -600,7 +600,7 @@ const UserListPage = () => {
                                         htmlFor="statusAktif"
                                         className="ml-2 block text-sm text-gray-900"
                                     >
-                                        User Aktif
+                                        Active User
                                     </label>
                                 </div>
                             </div>

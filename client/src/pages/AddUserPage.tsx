@@ -57,7 +57,7 @@ const AddUserPage = () => {
                 </h1>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3">
-                        <label className={labelStyle}>Nama</label>
+                        <label className={labelStyle}>Name</label>
                         <input
                             type="text"
                             name="nama"
@@ -83,7 +83,7 @@ const AddUserPage = () => {
                     </div>
 
                     <div className="mb-3">
-                        <label className={labelStyle}>Nomor Telepon</label>
+                        <label className={labelStyle}>Phone Number</label>
                         <input
                             type="text"
                             name="nomorTelepon"
@@ -96,7 +96,7 @@ const AddUserPage = () => {
                     </div>
 
                     <div className="mb-3">
-                        <label className={labelStyle}>Departemen</label>
+                        <label className={labelStyle}>Department</label>
                         <input
                             type="text"
                             name="departemen"
@@ -121,7 +121,7 @@ const AddUserPage = () => {
                             htmlFor="statusAktif"
                             className="ml-2 block text-sm text-gray-900"
                         >
-                            User Aktif
+                            Active User
                         </label>
                     </div>
 
