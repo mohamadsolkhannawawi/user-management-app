@@ -5,7 +5,7 @@
 import axios from 'axios'; // Imports the Axios library for making HTTP requests.
 import type { User, UserFormData } from '../types/user'; // Imports TypeScript types for User and UserFormData.
 
-const API_URL = 'import.meta.env.VITE_API_BASE_URL'; // Defines the base URL for the user API endpoints.
+const API_URL = 'import.meta.env.VITE_API_BASE_URL'; // Defines the base URL for the user API endpoints to Railway.
 
 /**
  * @function getUsers
