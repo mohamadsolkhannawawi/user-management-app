@@ -56,7 +56,6 @@ const HomePage = () => {
         threshold: 0.1,
     });
 
-
     return (
         <div className="container mx-auto p-8">
             {/* Hero Section */}
@@ -107,7 +106,9 @@ const HomePage = () => {
                 <h2 className="text-4xl font-bold text-center text-[#166C8E] mb-8">
                     Feature Highlights
                 </h2>
-                <div className="flex flex-col gap-8"> {/* Use flex-col to stack rows */}
+                <div className="flex flex-col gap-8">
+                    {' '}
+                    {/* Use flex-col to stack rows */}
                     {/* First Row */}
                     <div
                         ref={firstRowRef}
@@ -125,7 +126,6 @@ const HomePage = () => {
                             </div>
                         ))}
                     </div>
-
                     {/* Second Row */}
                     <div
                         ref={secondRowRef}
