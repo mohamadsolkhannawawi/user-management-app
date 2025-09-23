@@ -2,14 +2,10 @@
     "name": "user-management-app",
     "version": "1.0.0",
     "description": "A full-stack user management application",
-    "main": "index.js",
     "scripts": {
         "dev": "concurrently \"npm:dev:server\" \"npm:dev:client\"",
         "dev:server": "npm run dev --prefix server",
-        "dev:client": "npm run dev --prefix client",
-        "build": "npx prisma migrate deploy && vite build",
-        "postinstall": "npx prisma generate",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "dev:client": "npm run dev --prefix client"
     },
     "keywords": [],
     "author": "",
