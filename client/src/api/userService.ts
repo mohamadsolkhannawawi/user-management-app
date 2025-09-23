@@ -46,7 +46,10 @@ export const addUser = async (userData: UserFormData): Promise<User> => {
  * @param {UserFormData} userData The updated data for the user.
  * @returns {Promise<User>} A promise that resolves to the updated User object.
  */
-export const updateUser = async (id: number, userData: UserFormData): Promise<User> => {
+export const updateUser = async (
+    id: number,
+    userData: UserFormData
+): Promise<User> => {
     const response = await axios.put<User>(`${API_URL}/${id}`, userData);
     return response.data;
 };
