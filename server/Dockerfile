@@ -1,44 +1,45 @@
-# Add a comment at the top to enable multi-stage build features
 # syntax=docker/dockerfile:1
 
-# Stage 1: Build the application
+# --- BUILD STAGE ---
+# This stage installs dependencies and builds the TypeScript code.
 FROM node:20-slim AS builder
 WORKDIR /app
 
-# Copy all package.json files to leverage Docker cache
+# Copy all package.json files and the lock file from the monorepo root
 COPY package*.json ./
-COPY client/package*.json ./client/
-COPY server/package*.json ./server/
+COPY client/package.json ./client/
+COPY server/package.json ./server/
 
-# Install ALL dependencies from the root
-RUN npm install --omit=dev
+# Install ALL dependencies needed for the build process
+RUN npm install
 
-# Copy the prisma schema
-COPY prisma ./prisma/
+# Copy the rest of the source code into the container
+COPY . .
 
-# Generate the Prisma Client
+# Generate the Prisma Client using the schema from the root
 RUN npx prisma generate
 
-# Copy the backend source code
-COPY server/. .
-
-# Build the TypeScript project
-RUN npm run build
+# Build the server's TypeScript code into JavaScript
+# We use --prefix to run the script from the /server directory
+RUN npm run build --prefix server
 
 
-# Stage 2: Create the final production image
+# --- PRODUCTION STAGE ---
+# This stage creates a smaller, final image with only what's needed to run.
 FROM node:20-slim
 WORKDIR /app
 
-# Copy only necessary production files from the builder stage
+# Copy only production dependencies from the builder stage
 COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/server/package*.json ./server/
-COPY --from=builder /app/dist ./server/dist
-COPY --from=builder /app/prisma ./prisma/
+COPY package.json ./
+COPY server/package.json ./server/
 
-# Set the working directory to the server folder
-WORKDIR /app/server
+# Copy the compiled backend code from the builder stage
+COPY --from=builder /app/server/dist ./server/dist
 
-# Command to run migrations and start the application
-CMD ["npm", "run", "start"]
+# Copy the Prisma schema, which is needed at runtime for migrations
+COPY prisma ./prisma
+
+# The command to start the application.
+# It runs the "start" script located in the server's package.json
+CMD ["npm", "run", "start", "--prefix", "server"]
