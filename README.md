@@ -65,7 +65,7 @@ To run this project on your local machine, you'll need to use the **Vercel CLI**
 - [Node.js](https://nodejs.org/) (v18 or later)
 - [Git](https://git-scm.com/)
 - [Vercel CLI](https://vercel.com/docs/cli)
-- A PostgreSQL database (you can get a free one from [Neon](https://neon.tech/) or [Supabase](https://supabase.com/))
+- A PostgreSQL database (you can get a free one from [Vercel](https://vercel.com/) or [Supabase](https://supabase.com/))
 
 ### Setup Steps
 
@@ -126,7 +126,7 @@ Deployment is straightforward with Vercel:
 
 ## Backend API Documentation
 
-Base URL: `http://localhost:5001/api/users`
+Base URL: `http://localhost:3000/api/users`
 
 | Method | Endpoint | Description       | Body (JSON)                                            |
 | ------ | -------- | ----------------- | ------------------------------------------------------ |
