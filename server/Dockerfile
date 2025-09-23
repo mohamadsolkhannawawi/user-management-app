@@ -1,16 +1,16 @@
+# This line enables advanced multi-stage build features
 # syntax=docker/dockerfile:1
 
-# --- BUILD STAGE ---
-# This stage installs dependencies and builds the TypeScript code.
+# Stage 1: Build the application
 FROM node:20-slim AS builder
 WORKDIR /app
 
-# Copy all package.json files and the lock file from the monorepo root
+# Copy all package.json files first to leverage Docker cache
 COPY package*.json ./
-COPY client/package.json ./client/
-COPY server/package.json ./server/
+COPY client/package*.json ./client/
+COPY server/package*.json ./server/
 
-# Install ALL dependencies needed for the build process
+# Install ALL dependencies from the root
 RUN npm install
 
 # Copy the rest of the source code into the container
@@ -24,8 +24,7 @@ RUN npx prisma generate
 RUN npm run build --prefix server
 
 
-# --- PRODUCTION STAGE ---
-# This stage creates a smaller, final image with only what's needed to run.
+# Stage 2: Create the final production image
 FROM node:20-slim
 WORKDIR /app
 
