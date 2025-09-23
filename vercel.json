@@ -13,14 +13,26 @@
             }
         }
     ],
-    "rewrites": [
+    "routes": [
         {
-            "source": "/api/(.*)",
-            "destination": "/server/src/index.ts"
+            "src": "/api/(.*)",
+            "dest": "/server/src/index.ts"
         },
         {
-            "source": "/(.*)",
-            "destination": "/index.html"
+            "src": "/assets/(.*)",
+            "dest": "/client/assets/$1"
+        },
+        {
+            "src": "/vite.svg",
+            "dest": "/client/vite.svg"
+        },
+        {
+            "src": "/favicon.ico",
+            "dest": "/client/favicon.ico"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/client/index.html"
         }
     ]
 }
