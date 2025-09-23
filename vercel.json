@@ -23,6 +23,10 @@
             "dest": "/client/assets/$1"
         },
         {
+            "src": "/chart-no-axes-gantt.svg",
+            "dest": "/client/chart-no-axes-gantt.svg"
+        },
+        {
             "src": "/vite.svg",
             "dest": "/client/vite.svg"
         },
