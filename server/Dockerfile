@@ -5,17 +5,17 @@ WORKDIR /app
 # Install Prisma Client separately
 RUN npm install prisma --location=global
 
-# Copy package files and install dependencies
-COPY package*.json ./
+# Copy package files from the root directory
+COPY ../package*.json ./
 RUN npm install
 
-# Copy Prisma schema
-COPY prisma ./prisma/
+# Copy Prisma schema from the root directory
+COPY ../prisma ./prisma/
 
 # Generate Prisma Client
 RUN npx prisma generate
 
-# Copy the rest of the application source code
+# Copy the backend source code
 COPY . .
 
 # Build the TypeScript project
