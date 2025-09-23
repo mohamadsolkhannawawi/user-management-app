@@ -1,42 +1,43 @@
-# Stage 1: Build the application
+# Stage 1: Dependencies & Build
 FROM node:20-slim AS builder
 WORKDIR /app
 
-# Install Prisma Client separately
-RUN npm install prisma --location=global
-
-# Copy package files from the root directory
-COPY ../package*.json ./
+# Copy root package files and install ALL dependencies
+COPY package*.json ./
 RUN npm install
 
-# Copy Prisma schema from the root directory
-COPY ../prisma ./prisma/
+# Copy prisma schema
+COPY prisma ./prisma/
 
 # Generate Prisma Client
 RUN npx prisma generate
 
-# Copy the backend source code
-COPY . .
+# Copy backend source code
+COPY server/src ./src/
+
+# Copy backend tsconfig
+COPY server/tsconfig.json ./tsconfig.json
 
 # Build the TypeScript project
-RUN npm run build
+RUN npm run build --prefix server
 
-# Stage 2: Create the production image
+
+# Stage 2: Production
 FROM node:20-slim
 WORKDIR /app
 
-# Copy production dependencies from the builder stage
+# Copy production dependencies
 COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package*.json ./
+COPY package.json ./
 
-# Copy compiled code from the builder stage
+# Copy compiled backend code
 COPY --from=builder /app/dist ./dist
 
-# Copy Prisma schema for the runtime
+# Copy prisma schema for runtime
 COPY --from=builder /app/prisma ./prisma/
 
-# Expose the port the app runs on
+# Expose the correct port
 EXPOSE 5001
 
-# Command to run the application
-CMD ["npm", "run", "start"]
+# Command to start the server, referencing the unified package.json
+CMD ["npm", "run", "start", "--prefix", "server"]
