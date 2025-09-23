@@ -4,18 +4,29 @@
     "description": "\"# User Management App\"",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "vite",
+        "build": "npx prisma migrate deploy && vite build"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "devDependencies": {
         "lucide-static": "^0.544.0",
-        "prettier": "^3.6.2"
+        "prettier": "^3.6.2",
+        "@types/cors": "^2.8.19",
+        "@types/express": "^4.17.21",
+        "@types/node": "^20.14.10",
+        "prisma": "^5.17.0",
+        "ts-node": "^10.9.2",
+        "ts-node-dev": "^2.0.0",
+        "typescript": "^5.5.3"
     },
     "dependencies": {
-        "@prisma/client": "^6.16.2",
         "lucide-react": "^0.544.0",
-        "prisma": "^6.16.2"
+        "@prisma/client": "^5.17.0",
+        "cors": "^2.8.5",
+        "express": "^4.19.2",
+        "zod": "^4.1.11"
     }
 }
