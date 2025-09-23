@@ -1,44 +1,44 @@
-# This line enables advanced multi-stage build features
 # syntax=docker/dockerfile:1
 
-# Stage 1: Build the application
+# --- BUILD STAGE ---
+# This stage installs all dependencies and builds the TypeScript code.
 FROM node:20-slim AS builder
 WORKDIR /app
 
-# Copy all package.json files first to leverage Docker cache
-COPY package*.json ./
-COPY client/package*.json ./client/
-COPY server/package*.json ./server/
-
-# Install ALL dependencies from the root
-RUN npm install
-
-# Copy the rest of the source code into the container
+# Copy the entire project context into the container
 COPY . .
 
-# Generate the Prisma Client using the schema from the root
+# Install all dependencies from the root package.json
+RUN npm install
+
+# Generate the Prisma Client
 RUN npx prisma generate
 
-# Build the server's TypeScript code into JavaScript
-# We use --prefix to run the script from the /server directory
+# Build the server's TypeScript code, running the script from the /server folder
 RUN npm run build --prefix server
 
 
-# Stage 2: Create the final production image
+# --- PRODUCTION STAGE ---
+# This stage creates a smaller, final image with only what's needed to run.
 FROM node:20-slim
 WORKDIR /app
 
-# Copy only production dependencies from the builder stage
-COPY --from=builder /app/node_modules ./node_modules
-COPY package.json ./
+# Copy necessary package files for installing only production dependencies
+COPY package.json package-lock.json ./
 COPY server/package.json ./server/
+
+# Install ONLY production dependencies from the root
+RUN npm install --omit=dev
+
+# From the builder stage, copy the generated Prisma client and schema
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/prisma ./prisma
 
 # Copy the compiled backend code from the builder stage
 COPY --from=builder /app/server/dist ./server/dist
 
-# Copy the Prisma schema from the builder stage, which is needed at runtime
-COPY --from=builder /app/prisma ./prisma
+# Set the final working directory to the server folder
+WORKDIR /app/server
 
-# The command to start the application.
-# It runs the "start" script located in the server's package.json
-CMD ["npm", "run", "start", "--prefix", "server"]
+# The command to start the application
+CMD ["npm", "run", "start"]
