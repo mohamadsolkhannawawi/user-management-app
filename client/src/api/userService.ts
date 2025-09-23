@@ -5,7 +5,7 @@
 import axios from 'axios'; // Imports the Axios library for making HTTP requests.
 import type { User, UserFormData } from '../types/user'; // Imports TypeScript types for User and UserFormData.
 
-const API_URL = 'http://localhost:5001/api/users'; // Defines the base URL for the user API endpoints.
+const API_URL = '/api/users'; // Defines the base URL for the user API endpoints.
 
 /**
  * @function getUsers
