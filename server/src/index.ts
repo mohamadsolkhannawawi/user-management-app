@@ -8,19 +8,23 @@ import userRoutes from './routes/user.routes';
 const app = express();
 const prisma = new PrismaClient();
 
-// Fungsi untuk koneksi database, bisa dipanggil di awal jika perlu.
-// Untuk Vercel, koneksi Prisma seringkali dikelola per request.
-// Namun, untuk sederhana, kita bisa biarkan seperti ini.
+// Koneksi database
 prisma.$connect();
 
 // Middleware
-app.use(cors());
+// CORS configuration to allow requests from any origin
+const corsOptions = {
+    origin: '*',
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+};
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // Enable pre-flight for all routes
+
 app.use(express.json());
 
 // Routes
 app.use('/api/users', userRoutes);
 
-// PENTING: Hapus seluruh fungsi main() dan app.listen().
-// Cukup ekspor instance 'app' sebagai default.
-// Vercel akan mengambil alih file ini dan menjalankannya sebagai serverless function.
+// Export the app for deployment or testing
 export default app;

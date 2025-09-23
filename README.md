@@ -1,7 +1,7 @@
+---
 # User Management App
 
 User Management App is a web-based application consisting of a frontend (React + TypeScript + Tailwind + Vite) and a backend (Node.js + Express + Prisma + PostgreSQL). This project supports CRUD operations for user data, search, filter, sorting, and active/inactive user management.
-
 ---
 
 ## Project Structure
@@ -56,49 +56,71 @@ user-management-app/
 
 ---
 
-## Installation & Running
+## Running the Project Locally
+
+To run this project on your local machine, you'll need to use the **Vercel CLI** and have your own **PostgreSQL** database.
 
 ### Prerequisites
 
-- Node.js & npm
-- PostgreSQL (or use a cloud database)
+- [Node.js](https://nodejs.org/) (v18 or later)
+- [Git](https://git-scm.com/)
+- [Vercel CLI](https://vercel.com/docs/cli)
+- A PostgreSQL database (you can get a free one from [Neon](https://neon.tech/) or [Supabase](https://supabase.com/))
 
-### Installation Steps
+### Setup Steps
 
-1. **Clone the repository**
-    ```powershell
-    git clone <repo-url>
-    cd user-management-app
-    ```
-2. **Install dependencies**
-    ```powershell
-    cd server; npm install; cd ../client; npm install
-    ```
-3. **Setup database**
-    - Edit `server/.env` and set `DATABASE_URL` to your PostgreSQL connection string.
-    - Run migration & seed data:
-        ```powershell
-        cd ../server
-        npx prisma migrate dev --name init
-        npx prisma db seed
-        ```
-4. **Run backend**
-    ```powershell
-    npm start
-    # or
-    npx ts-node src/index.ts
-    ```
-5. **Run frontend**
-    ```powershell
-    cd ../client
-    npm run dev
+**1. Clone the Repository**
+
+```bash
+git clone [YOUR_REPOSITORY_LINK]
+cd [YOUR_PROJECT_FOLDER]
+```
+
+**2. Install Vercel CLI**
+
+```bash
+npm i -g vercel
+```
+
+**3. Login and Link the Project**
+
+```bash
+vercel login
+vercel link
+```
+
+**4. Set Up the Database**
+
+- Get your PostgreSQL connection string.
+- In your Vercel project settings, add an environment variable:
+    - **Key:** `DATABASE_URL`
+    - **Value:** `[YOUR_CONNECTION_STRING]`
+
+- Run database migration locally:
+
+    ```bash
+    vercel env pull .env.development.local
+    npx prisma migrate dev
     ```
 
-### Deployment
+**5. Run the Development Server**
 
-- Deploy backend to platforms like Railway, Vercel, Heroku, or VPS.
-- Deploy frontend to Vercel, Netlify, or other static hosting.
-- Make sure environment variables & database connection are set up.
+```bash
+vercel dev
+```
+
+Your app will be available at `http://localhost:3000`.
+
+---
+
+## Deployment
+
+Deployment is straightforward with Vercel:
+
+1. Push your code to GitHub/GitLab/Bitbucket.
+2. Import the repository into Vercel.
+3. Configure the environment variable `DATABASE_URL` in the Vercel dashboard.
+4. Vercel will automatically build and deploy both the backend and frontend.
 
 ---
 
@@ -114,33 +136,12 @@ Base URL: `http://localhost:5001/api/users`
 | PUT    | `/:id`   | Update user by ID | { nama, email, nomorTelepon, departemen, statusAktif } |
 | DELETE | `/:id`   | Delete user by ID | -                                                      |
 
-### Example: Add User Request
+---
 
-```json
-POST /api/users
-{
-  "nama": "Budi Santoso",
-  "email": "budi@example.com",
-  "nomorTelepon": "081234567890",
-  "departemen": "IT",
-  "statusAktif": true
-}
-```
+## Additional Resources
 
-### Success Response
-
-```json
-{
-    "id": 1,
-    "nama": "Budi Santoso",
-    "email": "budi@example.com",
-    "nomorTelepon": "081234567890",
-    "departemen": "IT",
-    "statusAktif": true,
-    "createdAt": "2025-09-22T10:00:00.000Z",
-    "updatedAt": "2025-09-22T10:00:00.000Z"
-}
-```
+- **API Postman Documentation**: [View Collection](https://.postman.co/workspace/E-Commerce~8de014ec-8d43-44ac-be07-c0c5e10c2d87/collection/36177362-ebec5765-b71f-4154-a793-e11fffd073c4?action=share&creator=36177362&active-environment=36177362-0fcbc454-fb68-420e-8124-c19c8da2bf23)
+- **Live Demo (Vercel)**: [User Management App Demo](https://user-management-app-fix.vercel.app/)
 
 ---
 
@@ -149,3 +150,11 @@ POST /api/users
 Feel free to fork, submit pull requests, or use this project for your user management needs.
 
 License: MIT
+
+---
+
+## Contact
+
+For collaboration, job opportunities, or professional inquiries, feel free to connect with me on [LinkedIn](https://www.linkedin.com/in/mohamadsolkhannawawi).
+
+---
