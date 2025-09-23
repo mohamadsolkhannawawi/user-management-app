@@ -2,13 +2,8 @@
 // This file defines the UserContext and UserProvider for global state management related to users.
 // It centralizes user data fetching, creation, updating, and deletion, along with managing loading and error states.
 
-import React, {
-    createContext, // Used to create a Context object.
-    useState, // React Hook for adding state to functional components.
-    useEffect, // React Hook for side effects in functional components.
-    useContext, // React Hook for consuming context.
-    ReactNode, // Type for React children.
-} from 'react';
+import { createContext, useState, useEffect, useContext } from 'react';
+import type { ReactNode } from 'react';
 import * as userService from '../api/userService'; // Imports all functions from the userService API.
 import toast from 'react-hot-toast'; // Imports the toast notification library.
 import axios from 'axios'; // Imports Axios for HTTP request error handling.

@@ -4,7 +4,7 @@
 
 import { useState, useMemo } from 'react'; // Imports React hooks for state management and memoization.
 import { useUser } from '../context/UserContext'; // Imports the custom hook to access user context.
-import type { User } from '../types/user'; // Imports the User type definition.
+// import type { User } from '../types/user'; // Imports the User type definition.
 
 /**
  * @function useUsers

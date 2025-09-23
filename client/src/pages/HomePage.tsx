@@ -2,7 +2,7 @@
 // This file defines the HomePage component, serving as the landing page for the User Management Application.
 // It provides an overview of the application's features and directs users to key functionalities.
 
-import React from 'react'; // Core React library for building UI components.
+// import React from 'react'; // Core React library for building UI components.
 import { Link } from 'react-router-dom'; // Used for declarative navigation within the application.
 import { useInView } from 'react-intersection-observer'; // Hook to detect when an element enters or exits the viewport, used for scroll-triggered animations.
 

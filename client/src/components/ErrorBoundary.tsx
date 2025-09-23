@@ -3,7 +3,8 @@
 // Error Boundaries catch JavaScript errors anywhere in their child component tree,
 // log those errors, and display a fallback UI instead of crashing the entire application.
 
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { Component } from 'react';
+import type { ErrorInfo, ReactNode } from 'react';
 
 /**
  * @interface Props

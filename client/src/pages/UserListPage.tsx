@@ -2,7 +2,7 @@
 // This file defines the UserListPage component, responsible for displaying a list of users
 // and providing functionalities for searching, filtering, sorting, editing, and deleting users.
 
-import React, { useState } from 'react'; // Core React library and useState hook for managing component-level state.
+import { useState } from 'react'; // useState hook for managing component-level state.
 import { useUser } from '../context/UserContext'; // Custom hook to access user-related data and actions from the UserContext.
 import { useUsers } from '../hooks/useUsers'; // Custom hook encapsulating user list logic (search, filter, sort, pagination).
 import UserListToolbar from '../components/user/UserListToolbar'; // Component for search input, filter dropdowns, etc.
