@@ -75,9 +75,9 @@ const HomePage = () => {
                     Welcome to UserApp
                 </h1>
                 {/* Sub-heading or descriptive text for the application's purpose. */}
-                <p className="mb-8 text-lg md:text-xl font-light text-gray-900 max-w-3xl">
+                <p className="mb-8 text-lg md:text-xl font-bold text-gray-900 max-w-3xl">
                     Manage your users with clarity and speed. Search, filter,
-                    sort, and edit in seconds backed by a modern stack built
+                    sort, and edit in seconds — backed by a modern stack built
                     for reliability.
                 </p>
 

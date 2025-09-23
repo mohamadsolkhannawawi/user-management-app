@@ -2,11 +2,12 @@
 // It sets up the Express server, connects to the database, and defines the API routes.
 
 import express from 'express'; // Import the Express framework to create and manage the server.
-import prisma from './prisma'; // Import singleton PrismaClient instance
+import { PrismaClient } from '@prisma/client'; // Import PrismaClient to interact with the database.
 import cors from 'cors'; // Import CORS middleware to enable Cross-Origin Resource Sharing.
 import userRoutes from './routes/user.routes'; // Import the user-related API routes.
 
 const app = express(); // Initialize the Express application instance.
+const prisma = new PrismaClient(); // Instantiate PrismaClient for database operations, managing connections and queries.
 const PORT = 5001; // Define the port number on which the server will listen for incoming requests.
 
 /**

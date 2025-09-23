@@ -5,7 +5,7 @@
 import axios from 'axios'; // Imports the Axios library for making HTTP requests.
 import type { User, UserFormData } from '../types/user'; // Imports TypeScript types for User and UserFormData.
 
-const API_URL = 'import.meta.env.VITE_API_BASE_URL'; // Defines the base URL for the user API endpoints to Railway.
+const API_URL = 'http://localhost:5001/api/users'; // Defines the base URL for the user API endpoints.
 
 /**
  * @function getUsers
@@ -46,10 +46,7 @@ export const addUser = async (userData: UserFormData): Promise<User> => {
  * @param {UserFormData} userData The updated data for the user.
  * @returns {Promise<User>} A promise that resolves to the updated User object.
  */
-export const updateUser = async (
-    id: number,
-    userData: UserFormData
-): Promise<User> => {
+export const updateUser = async (id: number, userData: UserFormData): Promise<User> => {
     const response = await axios.put<User>(`${API_URL}/${id}`, userData);
     return response.data;
 };

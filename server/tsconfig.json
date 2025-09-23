@@ -1,13 +1,19 @@
 {
-    "compilerOptions": {
-        "target": "es2016",
-        "module": "commonjs",
-        "moduleResolution": "node",
-        "outDir": "dist",
-        "strict": true,
-        "esModuleInterop": true,
-        "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true
-    },
-    "include": ["src/**/*"]
+  "compilerOptions": {
+    // Specifies the JavaScript language version for emitted JavaScript files.
+    "target": "es2016",
+    // Specifies the module code generation system. CommonJS is typical for Node.js applications.
+    "module": "commonjs",
+    // Determines how modules are resolved. "node" is used for Node.js-style module resolution.
+    "moduleResolution": "node",
+    // Redirects output structure to the specified directory. Compiled JavaScript files will be placed here.
+    "outDir": "dist",
+    // Enable all strict type-checking options. This ensures higher code quality and fewer bugs.
+    "strict": true,
+    // Enables emit interoperability between CommonJS and ES Modules.
+    "esModuleInterop": true
+  },
+  // Specifies an array of glob patterns that match files to be included in the program.
+  // Here, it includes all files within the 'src' directory and its subdirectories.
+  "include": ["src/**/*"]
 }
