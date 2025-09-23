@@ -37,8 +37,8 @@ COPY server/package.json ./server/
 # Copy the compiled backend code from the builder stage
 COPY --from=builder /app/server/dist ./server/dist
 
-# Copy the Prisma schema, which is needed at runtime for migrations
-COPY prisma ./prisma
+# Copy the Prisma schema from the builder stage, which is needed at runtime
+COPY --from=builder /app/prisma ./prisma
 
 # The command to start the application.
 # It runs the "start" script located in the server's package.json
